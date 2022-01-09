@@ -1,0 +1,23 @@
+{
+    "name": "az13js/desensitization",
+    "description": "A php data desensitization tool, mask sensitive data in strings, globally.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Desensitization\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "az13js",
+            "email": "1654602334@qq.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^7.0",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+    }
+}
