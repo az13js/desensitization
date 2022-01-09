@@ -18,6 +18,6 @@
     "require": {
         "php": "^7.0",
         "ext-json": "*",
-        "ext-mbstring": "*",
+        "ext-mbstring": "*"
     }
 }
