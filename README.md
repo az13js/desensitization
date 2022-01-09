@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "az13js/desensitization": "0.0.2-dev"
+        "az13js/desensitization": "0.0.1-dev"
     }
 }
 ```
