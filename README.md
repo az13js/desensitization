@@ -11,14 +11,11 @@
             "type": "vcs",
             "url": "https://gitee.com/az13js/desensitization.git"
         }
-    ],
-    "require": {
-        "az13js/desensitization": "0.0.1-dev"
-    }
+    ]
 }
 ```
 
-然后执行 ```composer install``` ，这样就安装完了。对某些不支持 Composer 的项目，可能你需要通过包含 ```vendor/autoload.php``` 引入类的自动加载功能。
+然后执行 ```composer require az13js/desensitization:dev-main``` ，这样就安装完了。对某些不支持 Composer 的项目，可能你需要通过包含 ```vendor/autoload.php``` 引入类的自动加载功能。
 
 ## 用法
 
