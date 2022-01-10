@@ -110,7 +110,7 @@ class Types
             $val = mb_substr($val, 0, 4) . str_repeat($symbol, $len - 4);
             return;
         }
-        $val = mb_substr($val, 0, 4) . str_repeat($symbol, 4) . mb_substr($val, 8);
+        $val = mb_substr($val, 0, 3) . str_repeat($symbol, 4) . mb_substr($val, 7);
     }
 
     /**

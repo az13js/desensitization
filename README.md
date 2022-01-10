@@ -353,7 +353,7 @@ return \Desensitization\Filter::response([
 
 ##### 内置的掩盖方式
 
-包内置了一些掩盖方式，可以设置 ```type``` 属性来使用。 ```type``` 的优先级比自定义的 ```left``` 和 ```right``` 等属性要高，换句话说使用 ```type``` 时忽略 ```left``` 、 ```right``` 等属性。下面是所有内置的掩盖方式。
+包内置了一些掩盖方式，可以设置 ```type``` 属性来使用。 ```type``` 的优先级比自定义的 ```reverse``` 、 ```left``` 和 ```right``` 等属性要高，换句话说使用 ```type``` 时忽略 ```reverse``` 、 ```left``` 、 ```right``` 等属性。下面是所有内置的掩盖方式。
 
 ###### credential - 普通证件号
 
