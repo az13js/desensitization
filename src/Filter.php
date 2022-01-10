@@ -56,16 +56,19 @@ class Filter
         if (!is_array($originData) && !is_object($originData)) {
             return $originData;
         }
-        // 目前支持php-fpm
-        if (!isset(static::$config['include']) || is_null(static::$config['include']) ||!isset($_SERVER['REQUEST_URI'])) {
+        $uri = $_SERVER['REQUEST_URI'] ?? null;
+        if (isset(static::$config['uri']) && !is_null(static::$config['uri'])) {
+            $uri = static::$config['uri'];
+        }
+        if (is_null($uri)) {
             return $originData;
         }
         if (is_array(static::$config['include']) && isset(static::$config['include']['match'])) {
             // 数组配置
-            if (!preg_match(static::$config['include']['match'], $_SERVER['REQUEST_URI'])) {
+            if (!preg_match(static::$config['include']['match'], $uri)) {
                 return $originData;
             }
-        } elseif (!static::$config['include']($_SERVER['REQUEST_URI'])) { // 匿名函数配置
+        } elseif (!static::$config['include']($uri)) { // 匿名函数配置
             return $originData;
         }
         $returnData = json_decode(json_encode($originData), true);
@@ -75,15 +78,18 @@ class Filter
                 $conf = &$config['roles'][$key];
                 if (is_array($conf) && isset($conf['mask'])) { // 数组配置
                     if (!is_string($val)) return; // 默认只是处理字符串而已
+                    $symbol = $conf['mask']['symbol'] ?? '*'; // 掩盖符号默认 *
+                    if (!empty($conf['mask']['type'])) { $type = $conf['mask']['type']; Types::$type($val, $symbol); return; } // 如果定义了类型
                     $valueOf = function($pathConfig, $len) { // 根据配置和长度返回要掩盖的长度
-                        if (empty($pathConfig)) return 0;
-                        if (is_array($pathConfig)) return call_user_func($pathConfig[1], $pathConfig[0] * $len);
-                        return round($pathConfig * $len);
+                        if (empty($pathConfig)) $l = 0;
+                        elseif (is_array($pathConfig)) $l = call_user_func($pathConfig[1], $pathConfig[0] * $len);
+                        else $l = is_int($pathConfig) ? $pathConfig : round($pathConfig * $len);
+                        return $l > $len ? $len : $l;
                     };
                     $len = mb_strlen($val);
                     $leftLen = $valueOf($conf['mask']['left'] ?? null, $len);
                     $rightLen = $valueOf($conf['mask']['right'] ?? null, $len);
-                    $symbol = $conf['mask']['symbol'] ?? '*'; // 符号默认 *
+                    if ($leftLen + $rightLen > $len) {$leftLen = $len; $rightLen = 0;}
                     if (empty($conf['mask']['reverse'])) {
                         $val = str_repeat($symbol, $leftLen) . mb_substr($val, $leftLen, $len - $leftLen - $rightLen) . str_repeat($symbol, $rightLen);
                     } else {
