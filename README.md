@@ -537,7 +537,7 @@ return \Desensitization\Filter::response([
 
 ```json
 {
-    "example":"1360****000"
+    "example":"136****0000"
 }
 ```
 
