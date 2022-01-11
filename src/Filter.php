@@ -93,7 +93,7 @@ class Filter
                     if (empty($conf['mask']['reverse'])) {
                         $val = str_repeat($symbol, $leftLen) . mb_substr($val, $leftLen, $len - $leftLen - $rightLen) . str_repeat($symbol, $rightLen);
                     } else {
-                        $val = mb_substr($val, 0, $leftLen) . str_repeat($symbol, $len - $leftLen - $rightLen) . mb_substr($val, -$rightLen);
+                        $val = mb_substr($val, 0, $leftLen) . str_repeat($symbol, $len - $leftLen - $rightLen) . ($rightLen > 0 ? mb_substr($val, -$rightLen) : '');
                     }
                 } else { // 匿名函数
                     $conf($val);
