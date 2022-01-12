@@ -28,11 +28,11 @@ class Filter
      * 配置过滤器的特性
      *
      * @param array $config 配置
-     * @return void
+     * @return array
      */
-    public static function config(array $config = [])
+    public static function config(array $config = []): array
     {
-        static::$config = array_replace_recursive(static::$config, $config);
+        return static::$config = array_replace_recursive(static::$config, $config);
     }
 
     /**
@@ -76,6 +76,7 @@ class Filter
         array_walk_recursive($returnData, function (&$val, $key, &$config) {
             if (isset($config['roles'][$key]) && !is_null($config['roles'][$key])) {
                 $conf = &$config['roles'][$key];
+                if (is_string($conf)) { Types::$conf($val); return; }
                 if (is_array($conf) && isset($conf['mask'])) { // 数组配置
                     if (!is_string($val)) return; // 默认只是处理字符串而已
                     $symbol = $conf['mask']['symbol'] ?? '*'; // 掩盖符号默认 *

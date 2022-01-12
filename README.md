@@ -353,7 +353,35 @@ return \Desensitization\Filter::response([
 
 ##### 内置的掩盖方式
 
-包内置了一些掩盖方式，可以设置 ```type``` 属性来使用。 ```type``` 的优先级比自定义的 ```reverse``` 、 ```left``` 和 ```right``` 等属性要高，换句话说使用 ```type``` 时忽略 ```reverse``` 、 ```left``` 、 ```right``` 等属性。下面是所有内置的掩盖方式。
+包内置了一些掩盖方式，可以设置 ```type``` 属性来使用。 ```type``` 的优先级比自定义的 ```reverse``` 、 ```left``` 和 ```right``` 等属性要高，换句话说使用 ```type``` 时忽略 ```reverse``` 、 ```left``` 、 ```right``` 等属性。
+
+例如内置的手机号掩盖规则可以这样来启用：
+
+```php
+Filter::config([
+    'include' => function($uri) { return true; },
+    'roles' => [
+        'example' => [
+            'mask' => [
+                'type' => 'mobile',
+            ],
+        ],
+    ],
+]);
+```
+
+或者，你可以用简化方式，所有内置掩盖类型都可以直接配置 ```roles``` 的值为字符串来直接应用：
+
+```php
+Filter::config([
+    'include' => function($uri) { return true; },
+    'roles' => [
+        'example' => 'mobile', // 对example属性应用手机号码掩盖规则
+    ],
+]);
+```
+
+下面是所有内置的掩盖方式，它们都支持通过 ```mask``` 或者直接设置值为字符串的方式来配置。
 
 ###### credential - 普通证件号
 
