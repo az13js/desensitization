@@ -17,6 +17,7 @@ class Filter
     private static $config = [
         // include配置，什么样的URI需要脱敏处理，你可以设置为null来移除。如果不配置默认不进行脱敏
         //'include' => function(string $uri) { return false; },
+        'include' => null,
         'roles' => [
             // 定义key应该被函数进行处理，你可通过设置key为null来移除。
             // 'key' => function(&$value) { $value = '******'; },
@@ -93,6 +94,9 @@ class Filter
     private static function apply($originData, &$config, bool &$isMatch, string $uri)
     {
         $isMatch = false;
+        if (is_null($config['include'])) {
+            return $originData;
+        }
         if (is_array($config['include']) && isset($config['include']['match'])) {
             // 数组配置
             if (!preg_match($config['include']['match'], $uri)) {
