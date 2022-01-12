@@ -156,6 +156,12 @@ var_dump(\Desensitization\Filter::response(new Foo()));
 ]);
 ```
 
+顺便一提，方法 ```response``` 的第二个参数可以强制指定一个URI，这将会忽略 ```config``` 中设置的 ```uri``` 配置和忽略 ```$_SERVER['REQUEST_URI']``` 。
+
+```php
+return \Desensitization\Filter::response($yourResponse, '/user/info');
+```
+
 ### 数组配置
 
 当你的要求不是那么复杂的时候，可以用数组来配置，无需编写匿名函数。

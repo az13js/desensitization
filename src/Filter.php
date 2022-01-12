@@ -5,7 +5,6 @@ namespace Desensitization;
  * 过滤数据
  *
  * 使用方法。先调用config进行配置，再调用别的方法。当然你也可以不配置直接调用。
- * 暂时只支持php-fpm。非fpm的因为没有$_SERVER['REQUEST_URI']，我会排除掉统统不脱敏。
  *
  */
 class Filter
@@ -49,16 +48,21 @@ class Filter
      * 过滤响应字段
      *
      * @param mixed $originData 原始数据
+     * @param string|null $forceUri 强制指定URI
      * @return mixed 过滤后的数据，如果原始数据有对象默认转换为数组
      */
-    public static function response($originData)
+    public static function response($originData, $forceUri = null)
     {
         if (!is_array($originData) && !is_object($originData)) {
             return $originData;
         }
-        $uri = $_SERVER['REQUEST_URI'] ?? null;
-        if (isset(static::$config['uri']) && !is_null(static::$config['uri'])) {
-            $uri = static::$config['uri'];
+        if (is_null($forceUri)) {
+            $uri = $_SERVER['REQUEST_URI'] ?? null;
+            if (isset(static::$config['uri']) && !is_null(static::$config['uri'])) {
+                $uri = static::$config['uri'];
+            }
+        } else {
+            $uri = $forceUri;
         }
         if (is_null($uri)) {
             return $originData;
