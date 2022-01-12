@@ -68,6 +68,14 @@ require_once 'vendor/autoload.php';
     'roles' => [
         'name' => function(&$input) { $input = '**'; },
     ],
+    'group' => [
+        [
+            'include' => function($uri) { return true; },
+            'roles' => [
+                'name' => function(&$input) { $input = '**'; },
+            ],
+        ],
+    ],
 ]);
 
 return \Desensitization\Filter::response([
@@ -736,3 +744,84 @@ return \Desensitization\Filter::response([
 - 数组配置下，不检查你配置的数值是不是在合法范围，例如你可能不小心传了一个负数到 ```left``` 或者 ```right``` 属性上，这种情况下不好保证能不能正常处理。你最好避免这种情况的发生。
 - 如果出现需要掩盖的长度大于字符总长度的时候，会认为掩盖长度是字符总长度，也就是说配置最多也就把所有字符都掩盖。
 - 使用 ```left``` 和 ```right``` 配置时，需要注意 ```1``` 和 ```1.0``` 的区别，前者是整数，含义是掩盖一个字符，后者是浮点数，含义是掩盖所有的 100% 的内容。
+
+### 多项配置
+
+可能存在一种情况，普通接口你想要对name属性进行处理，b接口只需要对name1属性处理，c接口只需要对name2属性处理。这里提供属性 ```group``` 用来支持这种场景。该属性定义了多个 ```include``` 和 ```roles``` 的配置对，优先级高于外层的 ```include``` 和 ```roles``` 。这样 ```group``` 成功地匹配到URI的时候，将会应用 ```group``` 里面对应的规则，而不会应用外层的 ```include``` 和 ```roles``` 。
+
+配置示例：
+
+```php
+require_once 'vendor/autoload.php';
+
+use \Desensitization\Filter as Filter;
+use \Desensitization\Types as Types;
+
+Filter::config([
+    'include' => function($uri) { return true; },
+    'roles' => [
+        'name' => function(&$input) { $input = '**'; },
+    ],
+    'group' => [
+        [
+            'include' => ['match' => '/^\/b/'],
+            'roles' => [
+                'name1' => function(&$input) { $input = '**'; },
+            ],
+        ],
+        [
+            'include' => ['match' => '/^\/c/'],
+            'roles' => [
+                'name2' => function(&$input) { $input = '**'; },
+            ],
+        ],
+    ],
+]);
+
+$a = Filter::response([
+    'name' => '周杰伦',
+    'name1' => '周杰伦',
+    'name2' => '周杰伦',
+], '/a');
+
+$b = Filter::response([
+    'name' => '周杰伦',
+    'name1' => '周杰伦',
+    'name2' => '周杰伦',
+], '/b');
+
+$c = Filter::response([
+    'name' => '周杰伦',
+    'name1' => '周杰伦',
+    'name2' => '周杰伦',
+], '/c');
+
+var_dump($a, $b, $c);
+```
+
+输出：
+
+    array(3) {
+      ["name"]=>
+      string(2) "**"
+      ["name1"]=>
+      string(9) "周杰伦"
+      ["name2"]=>
+      string(9) "周杰伦"
+    }
+    array(3) {
+      ["name"]=>
+      string(9) "周杰伦"
+      ["name1"]=>
+      string(2) "**"
+      ["name2"]=>
+      string(9) "周杰伦"
+    }
+    array(3) {
+      ["name"]=>
+      string(9) "周杰伦"
+      ["name1"]=>
+      string(9) "周杰伦"
+      ["name2"]=>
+      string(2) "**"
+    }

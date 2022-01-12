@@ -21,6 +21,8 @@ class Filter
             // 定义key应该被函数进行处理，你可通过设置key为null来移除。
             // 'key' => function(&$value) { $value = '******'; },
         ],
+        'group' => [ // 特殊URI配置，多组配置，优先级高于include和roles
+        ],
     ];
 
     /**
@@ -67,14 +69,39 @@ class Filter
         if (is_null($uri)) {
             return $originData;
         }
-        if (is_array(static::$config['include']) && isset(static::$config['include']['match'])) {
+        $isMatch = false;
+        if (!empty(static::$config['group'])) {
+            foreach (static::$config['group'] as &$configUnit) {
+                $returnData = static::apply($originData, $configUnit, $isMatch, $uri);
+                if ($isMatch) {
+                    return $returnData;
+                }
+            }
+        }
+        return static::apply($originData, static::$config, $isMatch, $uri);
+    }
+
+    /**
+     * 过滤响应字段
+     *
+     * @param mixed $originData 原始数据
+     * @param array $config 配置
+     * @param bool $isMatch 是否匹配
+     * @param string $uri 请求URI
+     * @return mixed 过滤后的数据，如果原始数据有对象默认转换为数组
+     */
+    private static function apply($originData, &$config, bool &$isMatch, string $uri)
+    {
+        $isMatch = false;
+        if (is_array($config['include']) && isset($config['include']['match'])) {
             // 数组配置
-            if (!preg_match(static::$config['include']['match'], $uri)) {
+            if (!preg_match($config['include']['match'], $uri)) {
                 return $originData;
             }
-        } elseif (!static::$config['include']($uri)) { // 匿名函数配置
+        } elseif (!$config['include']($uri)) { // 匿名函数配置
             return $originData;
         }
+        $isMatch = true;
         $returnData = json_decode(json_encode($originData), true);
         $originData = null;
         array_walk_recursive($returnData, function (&$val, $key, &$config) {
@@ -104,7 +131,7 @@ class Filter
                     $conf($val);
                 }
             }
-        }, static::$config);
+        }, $config);
         return $returnData;
     }
 }
