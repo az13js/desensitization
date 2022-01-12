@@ -17,7 +17,7 @@ class Types
      * @param string $symbol 掩盖符号
      * @return void
      */
-    public static function credential(string &$val, string $symbol)
+    public static function credential(string &$val, string $symbol = '*')
     {
         $len = mb_strlen($val);
         if ($len < 2) {
@@ -33,7 +33,7 @@ class Types
      * @param string $symbol 掩盖符号
      * @return void
      */
-    public static function idcard(string &$val, string $symbol)
+    public static function idcard(string &$val, string $symbol = '*')
     {
         $len = mb_strlen($val);
         if ($len < 4) {
@@ -49,7 +49,7 @@ class Types
      * @param string $symbol 掩盖符号
      * @return void
      */
-    public static function bank(string &$val, string $symbol)
+    public static function bank(string &$val, string $symbol = '*')
     {
         $len = mb_strlen($val);
         if ($len < 8) {
@@ -67,7 +67,7 @@ class Types
      * @param string $symbol 掩盖符号
      * @return void
      */
-    public static function netaccount(string &$val, string $symbol)
+    public static function netaccount(string &$val, string $symbol = '*')
     {
         $len = mb_strlen($val);
         if ($len < 2) {
@@ -83,7 +83,7 @@ class Types
      * @param string $symbol 掩盖符号
      * @return void
      */
-    public static function ip(string &$val, string $symbol)
+    public static function ip(string &$val, string $symbol = '*')
     {
         $len = mb_strlen($val);
         if ($len < 6) {
@@ -100,7 +100,7 @@ class Types
      * @param string $symbol 掩盖符号
      * @return void
      */
-    public static function mobile(string &$val, string $symbol)
+    public static function mobile(string &$val, string $symbol = '*')
     {
         $len = mb_strlen($val);
         if ($len <= 4) {
@@ -122,7 +122,7 @@ class Types
      * @param string $symbol 掩盖符号
      * @return void
      */
-    public static function telephone(string &$val, string $symbol)
+    public static function telephone(string &$val, string $symbol = '*')
     {
         $len = mb_strlen($val);
         if ($len <= 2) {
@@ -188,7 +188,7 @@ class Types
      * @param string $symbol 掩盖符号
      * @return void
      */
-    public static function name(string &$val, string $symbol)
+    public static function name(string &$val, string $symbol = '*')
     {
         $len = mb_strlen($val);
         switch ($len) {
@@ -214,7 +214,7 @@ class Types
      * @param string $symbol 掩盖符号
      * @return void
      */
-    public static function plate(string &$val, string $symbol)
+    public static function plate(string &$val, string $symbol = '*')
     {
         $len = mb_strlen($val);
         if ($len <= 4) {
@@ -233,7 +233,7 @@ class Types
      * @param string $symbol 掩盖符号
      * @return void
      */
-    public static function email(string &$val, string $symbol)
+    public static function email(string &$val, string $symbol = '*')
     {
         $len = mb_strlen($val);
         $at = mb_strpos($val, '@');
@@ -253,7 +253,7 @@ class Types
      * @param string $symbol 掩盖符号
      * @return void
      */
-    public static function address(string &$val, string $symbol)
+    public static function address(string &$val, string $symbol = '*')
     {
         $len = mb_strlen($val);
         $keywords = ['区', '市', '省'];
