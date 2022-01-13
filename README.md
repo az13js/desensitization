@@ -68,14 +68,6 @@ require_once 'vendor/autoload.php';
     'roles' => [
         'name' => function(&$input) { $input = '**'; },
     ],
-    'group' => [
-        [
-            'include' => function($uri) { return true; },
-            'roles' => [
-                'name' => function(&$input) { $input = '**'; },
-            ],
-        ],
-    ],
 ]);
 
 return \Desensitization\Filter::response([
@@ -94,6 +86,44 @@ return \Desensitization\Filter::response([
 {
     "mobile":"13699999999",
     "name":"**",
+    "sub":{
+        "mobile":"13699999998",
+        "name":"**"
+    }
+}
+```
+
+### 匹配键的相对路径
+
+支持通过像 ```user.name``` 这样，点连接多个键名指定符合这个规则的值进行处理。只需要开启 ```'dot' => true,``` ，例如：
+
+```php
+require_once 'vendor/autoload.php';
+
+\Desensitization\Filter::config([
+    'include' => function($uri) { return true; },
+    'dot' => true,
+    'roles' => [
+        'sub.name' => function(&$input) { $input = '**'; },
+    ],
+]);
+
+return \Desensitization\Filter::response([
+    'mobile' => '13699999999',
+    'name' => '玉皇大帝1',
+    'sub' => [
+        'mobile' => '13699999998',
+        'name' => '玉皇大帝2',
+    ],
+]);
+```
+
+响应内容为：
+
+```json
+{
+    "mobile":"13699999999",
+    "name":"玉皇大帝1",
     "sub":{
         "mobile":"13699999998",
         "name":"**"
@@ -747,7 +777,7 @@ return \Desensitization\Filter::response([
 
 ### 多项配置
 
-可能存在一种情况，普通接口你想要对name属性进行处理，b接口只需要对name1属性处理，c接口只需要对name2属性处理。这里提供属性 ```group``` 用来支持这种场景。该属性定义了多个 ```include``` 和 ```roles``` 的配置对，优先级高于外层的 ```include``` 和 ```roles``` 。这样 ```group``` 成功地匹配到URI的时候，将会应用 ```group``` 里面对应的规则，而不会应用外层的 ```include``` 和 ```roles``` 。
+可能存在一种情况，普通接口你想要对name属性进行处理，b接口只需要对name1属性处理，c接口只需要对name2属性处理。这里提供属性 ```group``` 用来支持这种场景。该属性定义了多个 ```dot``` 、 ```include``` 和 ```roles``` 的配置对，优先级高于外层的 ```dot``` 、 ```include``` 和 ```roles``` 。这样 ```group``` 成功地匹配到URI的时候，将会应用 ```group``` 里面对应的规则，而不会应用外层的。
 
 配置示例：
 
