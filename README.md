@@ -2,7 +2,13 @@
 
 ## 安装
 
-假设你正确安装了 Composer 和 JSON 、 mbstring 扩展。在 `composer.json` 中配置下面的属性：
+假设你正确安装了 Composer 和 JSON 、 mbstring 扩展。然后就像是一般的 Composer 包一样，你可以通过如下方式安装：
+
+    composer require az13js/desensitization
+
+一般这会从 ```https://packagist.org``` 上获取元数据并去 Github 上下载代码。
+
+当然你还可以在 `composer.json` 中配置下面的属性：
 
 ```json
 {
@@ -15,7 +21,9 @@
 }
 ```
 
-然后执行 ```composer require az13js/desensitization:dev-main``` ，这样就安装完了。对某些不支持 Composer 的项目，可能你需要通过包含 ```vendor/autoload.php``` 引入类的自动加载功能。
+然后执行 ```composer require az13js/desensitization:dev-main``` ，从 Gitee 上直接下载开发中的分支。
+
+对某些不支持 Composer 的项目，可能你需要通过包含 ```vendor/autoload.php``` 引入类的自动加载功能。
 
 ## 用法
 
