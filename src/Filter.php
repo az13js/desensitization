@@ -91,7 +91,7 @@ class Filter
      * @param string $uri 请求URI
      * @return mixed 过滤后的数据，如果原始数据有对象默认转换为数组
      */
-    private static function apply($originData, &$config, bool &$isMatch, string $uri)
+    private static function apply(&$originData, &$config, bool &$isMatch, string $uri)
     {
         $isMatch = false;
         if (is_null($config['include'])) {
@@ -108,8 +108,28 @@ class Filter
         $isMatch = true;
         $returnData = json_decode(json_encode($originData), true);
         $originData = null;
-        array_walk_recursive($returnData, function (&$val, $key, &$config) {
-            if (isset($config['roles'][$key]) && !is_null($config['roles'][$key])) {
+        $handler = function (&$val, $keyOrigin, &$config, array $chains = []) {
+            if (empty($config['dot'])) {
+                $condition = isset($config['roles'][$key]) && !is_null($config['roles'][$key]);
+                $key = $keyOrigin;
+            } else { // 开启dot匹配
+                $condition = false;
+                $key = '';
+                foreach ($config['roles'] as $k => &$v) {
+                    $dotArray = explode('.', $k);
+                    end($dotArray);
+                    $dotArrayLength = key($dotArray) + 1;
+                    if (!isset($chains[$dotArrayLength - 1])) {
+                        continue;
+                    }
+                    if ($dotArray === array_slice($chains, -$dotArrayLength)) {
+                        $condition = true;
+                        $key = $k;
+                        break;
+                    }
+                }
+            }
+            if ($condition) {
                 $conf = &$config['roles'][$key];
                 if (is_string($conf)) { Types::$conf($val); return; }
                 if (is_array($conf) && isset($conf['mask'])) { // 数组配置
@@ -135,7 +155,40 @@ class Filter
                     $conf($val);
                 }
             }
-        }, $config);
+        };
+        if (empty($config['dot'])) {
+            array_walk_recursive($returnData, $handler, $config);
+        } else {
+            // 这里用的是深度优先搜索。因为一般响应有可能出现长度很长的数组，比如返回1000个订单等等。
+            // 但是不太可能出现深度达到1000的数组或对象，所以如果这里用宽度优先搜索就可能需要创建一些
+            // 长度很大的数组。
+            if (!is_array($returnData)) {
+                return $returnData;
+            }
+            $stack = [&$returnData]; // 里面存放的一定是数组，但是有可能为空
+            $keyChain = [];
+            while (!empty($stack)) {
+                // 1. 从栈尾获取一个节点
+                end($stack);
+                $stackLastKey = key($stack);
+                $node = &$stack[$stackLastKey];
+                // 2. 展开节点
+                $k = key($node);
+                next($node);
+                if (is_null($k)) { // 节点展开完成，无法进一步展开，那么此节点删除出栈
+                    array_pop($stack);
+                    array_pop($keyChain);
+                } else { // 能进一步展开
+                    $keyChain[] = $k;
+                    if (is_array($node[$k])) { // 节点展开发现子节点，子节点入栈
+                        $stack[] = &$node[$k];
+                    } else { // 子节点不能展开的，那么不是数组，交给$handler
+                        $handler($node[$k], $k, $config, $keyChain);
+                        array_pop($keyChain);
+                    }
+                }
+            }
+        }
         return $returnData;
     }
 }
