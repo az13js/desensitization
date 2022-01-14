@@ -17,7 +17,7 @@ class Types
      * @param string $symbol 掩盖符号
      * @return void
      */
-    public static function credential(string &$val, string $symbol = '*')
+    public static function credential(&$val, string $symbol = '*')
     {
         if (!is_string($val)) return;
         $len = mb_strlen($val);
@@ -34,7 +34,7 @@ class Types
      * @param string $symbol 掩盖符号
      * @return void
      */
-    public static function idcard(string &$val, string $symbol = '*')
+    public static function idcard(&$val, string $symbol = '*')
     {
         if (!is_string($val)) return;
         $len = mb_strlen($val);
@@ -51,7 +51,7 @@ class Types
      * @param string $symbol 掩盖符号
      * @return void
      */
-    public static function bank(string &$val, string $symbol = '*')
+    public static function bank(&$val, string $symbol = '*')
     {
         if (!is_string($val)) return;
         $len = mb_strlen($val);
@@ -70,7 +70,7 @@ class Types
      * @param string $symbol 掩盖符号
      * @return void
      */
-    public static function netaccount(string &$val, string $symbol = '*')
+    public static function netaccount(&$val, string $symbol = '*')
     {
         if (!is_string($val)) return;
         $len = mb_strlen($val);
@@ -87,7 +87,7 @@ class Types
      * @param string $symbol 掩盖符号
      * @return void
      */
-    public static function ip(string &$val, string $symbol = '*')
+    public static function ip(&$val, string $symbol = '*')
     {
         if (!is_string($val)) return;
         $len = mb_strlen($val);
@@ -105,7 +105,7 @@ class Types
      * @param string $symbol 掩盖符号
      * @return void
      */
-    public static function mobile(string &$val, string $symbol = '*')
+    public static function mobile(&$val, string $symbol = '*')
     {
         if (!is_string($val)) return;
         $len = mb_strlen($val);
@@ -128,7 +128,7 @@ class Types
      * @param string $symbol 掩盖符号
      * @return void
      */
-    public static function telephone(string &$val, string $symbol = '*')
+    public static function telephone(&$val, string $symbol = '*')
     {
         if (!is_string($val)) return;
         $len = mb_strlen($val);
@@ -195,7 +195,7 @@ class Types
      * @param string $symbol 掩盖符号
      * @return void
      */
-    public static function name(string &$val, string $symbol = '*')
+    public static function name(&$val, string $symbol = '*')
     {
         if (!is_string($val)) return;
         $len = mb_strlen($val);
@@ -222,7 +222,7 @@ class Types
      * @param string $symbol 掩盖符号
      * @return void
      */
-    public static function plate(string &$val, string $symbol = '*')
+    public static function plate(&$val, string $symbol = '*')
     {
         if (!is_string($val)) return;
         $len = mb_strlen($val);
@@ -242,7 +242,7 @@ class Types
      * @param string $symbol 掩盖符号
      * @return void
      */
-    public static function email(string &$val, string $symbol = '*')
+    public static function email(&$val, string $symbol = '*')
     {
         if (!is_string($val)) return;
         $len = mb_strlen($val);
@@ -263,7 +263,7 @@ class Types
      * @param string $symbol 掩盖符号
      * @return void
      */
-    public static function address(string &$val, string $symbol = '*')
+    public static function address(&$val, string $symbol = '*')
     {
         if (!is_string($val)) return;
         $len = mb_strlen($val);
