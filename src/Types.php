@@ -13,12 +13,13 @@ class Types
      *
      * 除了身份证号码，银行卡号之外的一般的证件号码（护照、军官证件等）处理规则
      *
-     * @param string $val 待处理值
+     * @param mixed $val 待处理值（函数只处理string，非string忽略）
      * @param string $symbol 掩盖符号
      * @return void
      */
     public static function credential(string &$val, string $symbol = '*')
     {
+        if (!is_string($val)) return;
         $len = mb_strlen($val);
         if ($len < 2) {
             return;
@@ -29,12 +30,13 @@ class Types
     /**
      * 身份证号码
      *
-     * @param string $val 待处理值
+     * @param mixed $val 待处理值（函数只处理string，非string忽略）
      * @param string $symbol 掩盖符号
      * @return void
      */
     public static function idcard(string &$val, string $symbol = '*')
     {
+        if (!is_string($val)) return;
         $len = mb_strlen($val);
         if ($len < 4) {
             return;
@@ -45,12 +47,13 @@ class Types
     /**
      * 银行卡号码
      *
-     * @param string $val 待处理值
+     * @param mixed $val 待处理值（函数只处理string，非string忽略）
      * @param string $symbol 掩盖符号
      * @return void
      */
     public static function bank(string &$val, string $symbol = '*')
     {
+        if (!is_string($val)) return;
         $len = mb_strlen($val);
         if ($len < 8) {
             return;
@@ -63,12 +66,13 @@ class Types
      *
      * QQ、微博、微信（含微信小程序id、支付宝用户ID等）
      *
-     * @param string $val 待处理值
+     * @param mixed $val 待处理值（函数只处理string，非string忽略）
      * @param string $symbol 掩盖符号
      * @return void
      */
     public static function netaccount(string &$val, string $symbol = '*')
     {
+        if (!is_string($val)) return;
         $len = mb_strlen($val);
         if ($len < 2) {
             return;
@@ -79,12 +83,13 @@ class Types
     /**
      * IP地址
      *
-     * @param string $val 待处理值
+     * @param mixed $val 待处理值（函数只处理string，非string忽略）
      * @param string $symbol 掩盖符号
      * @return void
      */
     public static function ip(string &$val, string $symbol = '*')
     {
+        if (!is_string($val)) return;
         $len = mb_strlen($val);
         if ($len < 6) {
             $val = str_repeat($symbol, $len);
@@ -96,12 +101,13 @@ class Types
     /**
      * 个人手机号码
      *
-     * @param string $val 待处理值
+     * @param mixed $val 待处理值（函数只处理string，非string忽略）
      * @param string $symbol 掩盖符号
      * @return void
      */
     public static function mobile(string &$val, string $symbol = '*')
     {
+        if (!is_string($val)) return;
         $len = mb_strlen($val);
         if ($len <= 4) {
             return;
@@ -118,12 +124,13 @@ class Types
      *
      * 保留区号和后2位，其余掩盖
      *
-     * @param string $val 待处理值
+     * @param mixed $val 待处理值（函数只处理string，非string忽略）
      * @param string $symbol 掩盖符号
      * @return void
      */
     public static function telephone(string &$val, string $symbol = '*')
     {
+        if (!is_string($val)) return;
         $len = mb_strlen($val);
         if ($len <= 2) {
             return;
@@ -184,12 +191,13 @@ class Types
     /**
      * 姓名
      *
-     * @param string $val 待处理值
+     * @param mixed $val 待处理值（函数只处理string，非string忽略）
      * @param string $symbol 掩盖符号
      * @return void
      */
     public static function name(string &$val, string $symbol = '*')
     {
+        if (!is_string($val)) return;
         $len = mb_strlen($val);
         switch ($len) {
         case 0:
@@ -210,12 +218,13 @@ class Types
     /**
      * 车牌号
      *
-     * @param string $val 待处理值
+     * @param mixed $val 待处理值（函数只处理string，非string忽略）
      * @param string $symbol 掩盖符号
      * @return void
      */
     public static function plate(string &$val, string $symbol = '*')
     {
+        if (!is_string($val)) return;
         $len = mb_strlen($val);
         if ($len <= 4) {
             $val = str_repeat($symbol, $len);
@@ -229,12 +238,13 @@ class Types
     /**
      * E-mail
      *
-     * @param string $val 待处理值
+     * @param mixed $val 待处理值（函数只处理string，非string忽略）
      * @param string $symbol 掩盖符号
      * @return void
      */
     public static function email(string &$val, string $symbol = '*')
     {
+        if (!is_string($val)) return;
         $len = mb_strlen($val);
         $at = mb_strpos($val, '@');
         if (false === $at) {
@@ -249,12 +259,13 @@ class Types
     /**
      * 地址
      *
-     * @param string $val 待处理值
+     * @param mixed $val 待处理值（函数只处理string，非string忽略）
      * @param string $symbol 掩盖符号
      * @return void
      */
     public static function address(string &$val, string $symbol = '*')
     {
+        if (!is_string($val)) return;
         $len = mb_strlen($val);
         $keywords = ['区', '市', '省'];
         if ($len <= 1) {
