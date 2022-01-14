@@ -110,8 +110,8 @@ class Filter
         $originData = null;
         $handler = function (&$val, $keyOrigin, &$config, array $chains = []) {
             if (empty($config['dot'])) {
-                $condition = isset($config['roles'][$key]) && !is_null($config['roles'][$key]);
                 $key = $keyOrigin;
+                $condition = isset($config['roles'][$key]) && !is_null($config['roles'][$key]);
             } else { // 开启dot匹配
                 $condition = false;
                 $key = '';
