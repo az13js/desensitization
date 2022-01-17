@@ -785,7 +785,7 @@ return \Desensitization\Filter::response([
 
 ### 多项配置
 
-可能存在一种情况，普通接口你想要对name属性进行处理，b接口只需要对name1属性处理，c接口只需要对name2属性处理。这里提供属性 ```group``` 用来支持这种场景。该属性定义了多个 ```dot``` 、 ```include``` 和 ```roles``` 的配置对，优先级高于外层的 ```dot``` 、 ```include``` 和 ```roles``` 。这样 ```group``` 成功地匹配到URI的时候，将会应用 ```group``` 里面对应的规则，而不会应用外层的。
+可能存在一种情况，普通接口你想要对name属性进行处理，b接口只需要对name1属性处理，c接口只需要对name2属性处理。这里提供属性 ```group``` 用来支持这种场景。该属性能定义多个 ```dot``` 、 ```include``` 和 ```roles``` 等可配置属性的配置对，优先级高于外层的。这样 ```group``` 成功地匹配到URI的时候，将会应用 ```group``` 里面对应的规则，而不会应用外层的。
 
 配置示例：
 
@@ -863,3 +863,55 @@ var_dump($a, $b, $c);
       ["name2"]=>
       string(2) "**"
     }
+
+### 脱敏前后对数据进行处理
+
+如果你希望在脱敏前、脱敏后对响应的数据进行一些处理，例如添加点属性或者修改已有属性内容，那么你可以使用 ```before``` 、 ```after``` 属性进行配置。
+
+例如下面这个示例在脱敏前把 ```name``` 属性的内容复制，并赋值到新增属性 ```backup``` 上，脱敏后又新增了一个属性 ```note``` 。
+
+```php
+require_once 'vendor/autoload.php';
+
+\Desensitization\Filter::config([
+    'include' => function($uri) { return true; },
+    'roles' => [
+        'name' => 'name',
+    ],
+    'before' => function(&$data) { $data['backup'] = $data['name']; },
+    'after' => function(&$data) { $data['note'] = "before: {$data['backup']}, after: {$data['name']}"; },
+]);
+
+return \Desensitization\Filter::response([
+    'name' => '周杰伦',
+]);
+```
+
+响应内容：
+
+```json
+{
+    "name":"*杰伦",
+    "backup":"周杰伦",
+    "note":"before: 周杰伦, after: *杰伦"
+}
+```
+
+同样的， ```before``` 和 ```after``` 也能在 ```group``` 内使用。可以再次赋值为 ```null``` 来取消 ```before``` 和 ```after``` 配置的匿名函数。
+
+```php
+\Desensitization\Filter::config([
+    'include' => function($uri) { return true; },
+    'roles' => [
+        'name' => 'name',
+    ],
+    'before' => function(&$data) { $data['backup'] = $data['name']; },
+    'after' => function(&$data) { $data['note'] = "before: {$data['backup']}, after: {$data['name']}"; },
+]);
+
+// 撤销配置
+\Desensitization\Filter::config([
+    'before' => null,
+    'after' => null,
+]);
+```

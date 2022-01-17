@@ -156,6 +156,7 @@ class Filter
                 }
             }
         };
+        if (isset($config['before']) && !is_null($config['before'])) { $config['before']($returnData); }
         if (empty($config['dot'])) {
             array_walk_recursive($returnData, $handler, $config);
         } else {
@@ -189,6 +190,7 @@ class Filter
                 }
             }
         }
+        if (isset($config['after']) && !is_null($config['after'])) { $config['after']($returnData); }
         return $returnData;
     }
 }
